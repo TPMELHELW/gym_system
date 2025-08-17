@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gym_qr_code/features/scan_qr_code/controller/scan_qr_code_controller.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+
+class ScanQrCodeScreen extends StatelessWidget {
+  const ScanQrCodeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ScanQrCodeController controller = Get.put(ScanQrCodeController());
+    return Scaffold(
+      appBar: AppBar(title: Text("QR Code Scanner")),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 4,
+            child: QRView(
+              key: controller.qrKey,
+              onQRViewCreated: controller.onQRViewCreated,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: GetBuilder<ScanQrCodeController>(
+                builder: (controller) {
+                  return Text(
+                    controller.scannedData ?? "Scan a QR code",
+                    style: TextStyle(fontSize: 18),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
