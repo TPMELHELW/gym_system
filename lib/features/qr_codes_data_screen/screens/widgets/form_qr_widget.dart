@@ -5,6 +5,7 @@ import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/calend
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/display_qr_function.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
 import 'package:gym_qr_code/core/common/noraml_button_widget.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class FormQrWidget extends StatelessWidget {
   const FormQrWidget({super.key});
@@ -20,6 +21,7 @@ class FormQrWidget extends StatelessWidget {
           TextFormField(
             controller: homeController.nameController,
             decoration: InputDecoration(
+              suffixIcon: Icon(Iconsax.user),
               filled: true,
               fillColor: AppColors.grey,
               hintText: 'Enter Name',
@@ -48,10 +50,10 @@ class FormQrWidget extends StatelessWidget {
                 if (homeController.isEdit.value) {
                   await homeController.editUser();
                 } else {
-                  await homeController.addUser();
                   displayQrFunction(
                     '${homeController.nameController.text} \n${homeController.firstDateController.text} \n${homeController.endDateController.text}',
                   );
+                  await homeController.addUser();
                 }
               },
               text: homeController.isEdit.value

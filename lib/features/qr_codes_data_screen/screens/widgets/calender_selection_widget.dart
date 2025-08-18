@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_qr_code/core/constans/app_colors.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class CalenderSelectionWidget extends StatelessWidget {
   final String label;
@@ -26,7 +27,7 @@ class CalenderSelectionWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none,
           ),
-          suffixIcon: Icon(Icons.calendar_today),
+          suffixIcon: Icon(Iconsax.calendar),
         ),
         onTap: () => homeController.selectDate(context, controller),
         validator: (value) {

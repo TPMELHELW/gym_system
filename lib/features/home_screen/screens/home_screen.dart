@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/common/noraml_button_widget.dart';
-import 'package:gym_qr_code/features/qr_codes_data_screen/screens/qr_codes_data_screen.dart';
-import 'package:gym_qr_code/features/scan_qr_code/screens/scan_qr_code_screen.dart';
+import 'package:gym_qr_code/core/routes/app_routes.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(HomeController());
     return Scaffold(
-      appBar: AppBar(title: Text('Home Screen'), centerTitle: true),
+      appBar: AppBar(
+        title: Text('Home Screen'),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Get.toNamed(AppRoutes.info),
+          icon: Icon(Iconsax.info_circle_copy),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -23,13 +29,13 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 30),
             NoramlButtonWidget(
               onPressed: () {
-                Get.to(() => QrCodesDataScreen());
+                Get.toNamed(AppRoutes.qrData);
               },
               text: 'Add New QR Code',
             ),
             NoramlButtonWidget(
               onPressed: () {
-                Get.to(ScanQrCodeScreen());
+                Get.toNamed(AppRoutes.scan);
               },
               text: 'Scan Qr Code',
             ),

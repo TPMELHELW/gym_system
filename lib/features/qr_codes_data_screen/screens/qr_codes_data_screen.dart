@@ -4,6 +4,7 @@ import 'package:gym_qr_code/core/constans/app_colors.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/display_qr_function.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/form_qr_widget.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class QrCodesDataScreen extends StatelessWidget {
@@ -30,6 +31,14 @@ class QrCodesDataScreen extends StatelessWidget {
                 child: Column(
                   spacing: 20.0,
                   children: [
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     // controller.showNotification('Hello');
+                    //     controller.isEdit.value = false;
+                    //   },
+                    //   child: Text('Send'),
+                    //   // color: AppColors.dark,
+                    // ),
                     Text(
                       'Add QR Code',
                       style: Theme.of(context).textTheme.headlineSmall!
@@ -79,11 +88,11 @@ class QrCodesDataScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.edit),
+                              icon: Icon(Iconsax.edit),
                               onPressed: () => controller.getInputToEdit(index),
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: Icon(Iconsax.trash),
                               onPressed: () => controller.deleteUser(index),
                             ),
                           ],

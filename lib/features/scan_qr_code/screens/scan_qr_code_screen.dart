@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gym_qr_code/core/constans/app_colors.dart';
 import 'package:gym_qr_code/features/scan_qr_code/controller/scan_qr_code_controller.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
@@ -27,7 +28,9 @@ class ScanQrCodeScreen extends StatelessWidget {
                 builder: (controller) {
                   return Text(
                     controller.scannedData ?? "Scan a QR code",
-                    style: TextStyle(fontSize: 18),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium!.copyWith(color: AppColors.light),
                   );
                 },
               ),

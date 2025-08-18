@@ -11,6 +11,15 @@ void displayQrFunction(String data) async {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'QR Code',
+              style: Theme.of(
+                Get.context!,
+              ).textTheme.headlineSmall!.copyWith(color: AppColors.dark),
+            ),
+          ),
           QrImageView(
             backgroundColor: Colors.white,
             version: QrVersions.auto,
