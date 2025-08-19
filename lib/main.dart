@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/routes/app_pages.dart';
 import 'package:gym_qr_code/core/theme/theme.dart';
@@ -9,8 +10,11 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:workmanager/workmanager.dart';
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(UserModelAdapter());
     await QrCodesDataController.sendExpiredNotifications();
     return Future.value(true);
   });
@@ -19,14 +23,15 @@ void callbackDispatcher() {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.notification.request();
-  await Workmanager().initialize(callbackDispatcher);
-  Workmanager().registerPeriodicTask(
-    "1",
-    "checkExpiredSubscriptions",
-    frequency: Duration(hours: 24),
-  );
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Workmanager().registerPeriodicTask(
+    DateTime.now().millisecondsSinceEpoch.toString(),
+    "checkExpiredSubscriptions",
+    frequency: const Duration(hours: 24),
+  );
+
   runApp(MyApp());
 }
 
@@ -37,6 +42,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(QrCodesDataController());
     return GetMaterialApp(
+      locale: const Locale('ar', 'EG'),
+      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      fallbackLocale: const Locale('en', 'US'),
+
       getPages: AppPages().pages,
       themeMode: ThemeMode.system,
       darkTheme: AppTheme.darkTheme,

@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Screen'),
+        title: Text('الشاشة الرئيسية'),
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Get.toNamed(AppRoutes.info),
@@ -31,13 +31,13 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Get.toNamed(AppRoutes.qrData);
               },
-              text: 'Add New QR Code',
+              text: 'إدارة المشتركين',
             ),
             NoramlButtonWidget(
               onPressed: () {
                 Get.toNamed(AppRoutes.scan);
               },
-              text: 'Scan Qr Code',
+              text: 'مسح رمز الاستجابة السريعة',
             ),
           ],
         ),

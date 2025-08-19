@@ -12,7 +12,7 @@ class QrCodesDataScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QrCodesDataController controller = Get.put(QrCodesDataController());
+    final QrCodesDataController controller = QrCodesDataController.to;
     return Scaffold(
       appBar: AppBar(title: Text('QR Codes Data')),
       body: Padding(
@@ -31,16 +31,8 @@ class QrCodesDataScreen extends StatelessWidget {
                 child: Column(
                   spacing: 20.0,
                   children: [
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     // controller.showNotification('Hello');
-                    //     controller.isEdit.value = false;
-                    //   },
-                    //   child: Text('Send'),
-                    //   // color: AppColors.dark,
-                    // ),
                     Text(
-                      'Add QR Code',
+                      'إدارة بيانات رموز الاستجابة السريعة',
                       style: Theme.of(context).textTheme.headlineSmall!
                           .copyWith(color: AppColors.dark),
                     ),

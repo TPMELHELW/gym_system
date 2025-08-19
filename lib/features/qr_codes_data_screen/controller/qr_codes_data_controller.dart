@@ -66,14 +66,14 @@ class QrCodesDataController extends GetxController {
   }
 
   Future<void> selectDate(
-    BuildContext context,
+    // BuildContext context,
     TextEditingController controller,
   ) async {
     DateTime? picked = await showDatePicker(
-      context: context,
+      locale: Locale('ar', 'EG'),
+      context: Get.context!,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
-      // initialDatePickerMode :DatePickerMode.
       lastDate: DateTime(2070),
     );
 

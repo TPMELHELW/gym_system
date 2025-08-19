@@ -24,7 +24,7 @@ class FormQrWidget extends StatelessWidget {
               suffixIcon: Icon(Iconsax.user),
               filled: true,
               fillColor: AppColors.grey,
-              hintText: 'Enter Name',
+              hintText: 'ادخل اسم المشترك',
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(15),
@@ -35,11 +35,11 @@ class FormQrWidget extends StatelessWidget {
             spacing: 10,
             children: [
               CalenderSelectionWidget(
-                label: 'Start Date',
+                label: 'تاريخ البدء',
                 controller: homeController.firstDateController,
               ),
               CalenderSelectionWidget(
-                label: 'End Date',
+                label: 'تاريخ الانتهاء',
                 controller: homeController.endDateController,
               ),
             ],
@@ -57,8 +57,8 @@ class FormQrWidget extends StatelessWidget {
                 }
               },
               text: homeController.isEdit.value
-                  ? 'Update QR Code'
-                  : 'Display QR Code',
+                  ? 'تعديل المشترك'
+                  : 'عرض رمز الاستجابة السريعة',
             ),
           ),
         ],

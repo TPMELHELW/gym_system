@@ -29,7 +29,7 @@ class CalenderSelectionWidget extends StatelessWidget {
           ),
           suffixIcon: Icon(Iconsax.calendar),
         ),
-        onTap: () => homeController.selectDate(context, controller),
+        onTap: () => homeController.selectDate(controller),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please pick a date';
