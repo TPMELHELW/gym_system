@@ -16,10 +16,14 @@ class UserModel {
   @HiveField(3)
   final String imagePath;
 
+  @HiveField(4)
+  final int id;
+
   UserModel({
     required this.name,
     required this.startDate,
     required this.endDate,
     required this.imagePath,
+    required this.id,
   });
 }

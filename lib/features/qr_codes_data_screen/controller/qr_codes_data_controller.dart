@@ -20,32 +20,57 @@ class QrCodesDataController extends GetxController {
   final TextEditingController firstDateController = TextEditingController();
   final TextEditingController endDateController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  // final TextEditingController searchController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String imagePath = '';
-
+  Rx<String> imagePath = ''.obs;
   RxList<UserModel> users = <UserModel>[].obs;
+  RxList<UserModel> filteredUsers = <UserModel>[].obs;
+
   Rx<bool> isEdit = false.obs;
   int currentIndex = 0;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  void searchFun(String query) {
+    if (query.isEmpty) {
+      filteredUsers.assignAll(users);
+    } else {
+      filteredUsers.assignAll(
+        users.where(
+          (user) => user.name.toLowerCase().contains(query.toLowerCase()),
+        ),
+      );
+    }
+  }
+
   Future<void> loadUsers() async {
     users.value = await userServices.getUsers();
-    log(users[0].imagePath);
+    filteredUsers.assignAll(users);
+    log('Loaded users: ${users.length}');
   }
 
   Future<void> deleteUser(int index) async {
-    await userServices.deleteUserAt(index);
-    users.removeAt(index);
+    // Use filteredUsers for index
+    final user = filteredUsers[index];
+    final userIndex = users.indexOf(user);
+
+    await userServices.deleteUserAt(userIndex);
+    final File imageFile = File(user.imagePath);
+    if (await imageFile.exists()) {
+      await imageFile.delete();
+    }
+    users.removeAt(userIndex);
+    filteredUsers.removeAt(index);
   }
 
   void getInputToEdit(int index) {
-    firstDateController.text = users[index].startDate;
-    endDateController.text = users[index].endDate;
-    nameController.text = users[index].name;
-    imagePath = users[index].imagePath;
-    currentIndex = index;
+    final user = filteredUsers[index];
+    firstDateController.text = user.startDate;
+    endDateController.text = user.endDate;
+    nameController.text = user.name;
+    imagePath.value = user.imagePath;
+    currentIndex = users.indexOf(user);
     isEdit.value = true;
   }
 
@@ -54,10 +79,12 @@ class QrCodesDataController extends GetxController {
       name: nameController.text,
       startDate: firstDateController.text,
       endDate: endDateController.text,
-      imagePath: imagePath,
+      imagePath: imagePath.value,
+      id: users[currentIndex].id, // keep original id
     );
     await userServices.updateUserAt(currentIndex, user);
     users[currentIndex] = user;
+    searchFun(''); // Reset search and update filteredUsers
     isEdit.value = false;
     resetController();
   }
@@ -66,21 +93,27 @@ class QrCodesDataController extends GetxController {
     nameController.clear();
     firstDateController.clear();
     endDateController.clear();
-    imagePath = '';
+    imagePath.value = '';
   }
 
   Future<void> addUser() async {
     if (!formKey.currentState!.validate()) return;
-    log(imagePath);
+    log(imagePath.value);
     final user = UserModel(
       name: nameController.text,
       startDate: firstDateController.text,
       endDate: endDateController.text,
-      imagePath: imagePath == '' ? 'assets/images/logo.png' : imagePath,
+      imagePath: imagePath.value == ''
+          ? 'assets/images/logo.png'
+          : imagePath.value,
+      id: DateTime.now().millisecondsSinceEpoch,
     );
     await userServices.addUser(user);
     await loadUsers();
-    displayQrFunction('${user.name}\n${user.startDate}\n${user.endDate}');
+    searchFun(''); // Reset search and update filteredUsers
+    displayQrFunction(
+      '${user.id}\n${user.name}\n${user.startDate}\n${user.endDate}',
+    );
     resetController();
   }
 
@@ -134,17 +167,17 @@ class QrCodesDataController extends GetxController {
         ],
       );
       if (croppedFile == null) {
-        log('ddd');
+        // log('ddd');
         return;
       }
-      log('ssss');
+      // log('ssss');
       final Directory appPath = await getApplicationDocumentsDirectory();
       final String fileName = basename(croppedFile.path);
       final String destinationPath = path.join(appPath.path, fileName);
       final File newImage = await File(croppedFile.path).copy(destinationPath);
 
-      imagePath = newImage.path;
-      log('Image saved at: $imagePath');
+      imagePath.value = newImage.path;
+      // log('Image saved at: $imagePath');
       Get.back();
     } catch (e) {
       log('Error choosing image: $e');
@@ -153,9 +186,13 @@ class QrCodesDataController extends GetxController {
 
   @override
   void onInit() {
-    _initNotifications();
-    loadUsers().then((_) => checkExpiredSubscriptions());
     super.onInit();
+    _initNotifications();
+    loadUsers().then((_) {
+      filteredUsers.assignAll(users);
+      checkExpiredSubscriptions();
+    });
+    // searchController.addListener(_onSearchChanged);
   }
 
   void _initNotifications() async {
@@ -164,6 +201,12 @@ class QrCodesDataController extends GetxController {
     final InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  @override
+  void onClose() {
+    // searchController.dispose();
+    super.onClose();
   }
 
   void checkExpiredSubscriptions() {

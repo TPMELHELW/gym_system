@@ -5,6 +5,7 @@ import 'package:gym_qr_code/core/validation/input_validation.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/calender_selection_widget.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
 import 'package:gym_qr_code/core/common/noraml_button_widget.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/show_select_image.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class FormQrWidget extends StatelessWidget {
@@ -48,72 +49,28 @@ class FormQrWidget extends StatelessWidget {
               ),
             ],
           ),
-          TextFormField(
-            readOnly: true,
+          Obx(
+            () => TextFormField(
+              readOnly: true,
+              decoration: InputDecoration(
+                suffixIcon: TextButton(
+                  onPressed: () {
+                    showSelectImage();
+                  },
+                  child: homeController.imagePath.value == ''
+                      ? Text('اختر صورة')
+                      : Text('تم اختيار صورة'),
+                ),
+                filled: true,
 
-            decoration: InputDecoration(
-              suffixIcon: TextButton(
-                onPressed: () {
-                  Get.bottomSheet(
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.light,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              await homeController.chooseImage(false);
-                            },
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Iconsax.gallery, size: 50),
-                                Text(
-                                  'المعرض',
-                                  style: Theme.of(context).textTheme.bodyLarge!
-                                      .copyWith(color: AppColors.dark),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          GestureDetector(
-                            onTap: () async {
-                              await homeController.chooseImage(true);
-                            },
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Iconsax.camera, size: 50),
-                                Text(
-                                  'الكاميرا',
-                                  style: Theme.of(context).textTheme.bodyLarge!
-                                      .copyWith(color: AppColors.dark),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                child: Text('اختار الصورة'),
-              ),
-              filled: true,
-
-              fillColor: AppColors.grey,
-              hintText: homeController.imagePath == ''
-                  ? 'اختر صورة'
-                  : 'تم اختيار صورة',
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(15),
+                fillColor: AppColors.grey,
+                hintText: homeController.imagePath.value == ''
+                    ? 'اختر صورة'
+                    : 'تم اختيار صورة',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
             ),
           ),

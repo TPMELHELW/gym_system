@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset('assets/images/logo.png'),
+            Image.asset('assets/images/logo1.png'),
             SizedBox(height: 30),
             NoramlButtonWidget(
               onPressed: () {

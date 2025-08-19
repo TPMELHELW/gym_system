@@ -25,7 +25,7 @@ void main() async {
   await Permission.notification.request();
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Workmanager().initialize(callbackDispatcher);
   await Workmanager().registerPeriodicTask(
     DateTime.now().millisecondsSinceEpoch.toString(),
     "checkExpiredSubscriptions",

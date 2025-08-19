@@ -26,4 +26,9 @@ class UserServices {
     final box = await _box;
     await box.putAt(index, updatedUser);
   }
+
+  Future<UserModel?> getUserById(int id) async {
+    final box = await _box;
+    return box.values.firstWhere((user) => user.id == id);
+  }
 }

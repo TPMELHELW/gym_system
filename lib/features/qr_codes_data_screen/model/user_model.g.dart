@@ -21,13 +21,14 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       startDate: fields[1] as String,
       endDate: fields[2] as String,
       imagePath: fields[3] as String? ?? '',
+      id: fields[4] as int? ?? DateTime.now().millisecondsSinceEpoch,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(2)
       ..write(obj.endDate)
       ..writeByte(3)
-      ..write(obj.imagePath);
+      ..write(obj.imagePath)
+      ..writeByte(4)
+      ..write(obj.id);
   }
 
   @override

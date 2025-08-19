@@ -26,11 +26,25 @@ class ScanQrCodeScreen extends StatelessWidget {
             child: Center(
               child: GetBuilder<ScanQrCodeController>(
                 builder: (controller) {
-                  return Text(
-                    controller.scannedData ?? "Scan a QR code",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium!.copyWith(color: AppColors.light),
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GetBuilder<ScanQrCodeController>(
+                        builder: (controller) {
+                          return CircleAvatar(
+                            backgroundImage: controller.provider,
+                            radius: 30,
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        controller.scannedData ?? "Scan a QR code",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: AppColors.light,
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
