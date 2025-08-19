@@ -13,9 +13,13 @@ class UserModel {
   @HiveField(2)
   final String endDate;
 
+  @HiveField(3)
+  final String imagePath;
+
   UserModel({
     required this.name,
     required this.startDate,
     required this.endDate,
+    required this.imagePath,
   });
 }

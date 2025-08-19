@@ -32,7 +32,7 @@ class CalenderSelectionWidget extends StatelessWidget {
         onTap: () => homeController.selectDate(controller),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please pick a date';
+            return 'يرجى اختيار $label';
           }
           return null;
         },

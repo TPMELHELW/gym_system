@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/constans/app_colors.dart';
@@ -59,15 +61,25 @@ class QrCodesDataScreen extends StatelessWidget {
                     itemCount: controller.users.length,
                     itemBuilder: (context, index) {
                       final user = controller.users[index];
+                      ImageProvider? provider;
+
+                      if (user.imagePath.isNotEmpty) {
+                        if (user.imagePath.startsWith('assets/')) {
+                          // from assets
+                          provider = AssetImage(user.imagePath);
+                        } else {
+                          // from device file
+                          provider = FileImage(File(user.imagePath));
+                        }
+                      }
+
                       return ListTile(
                         onTap: () {
                           displayQrFunction(
                             '${controller.users[index].name}\n${controller.users[index].startDate}\n${controller.users[index].endDate}',
                           );
                         },
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/logo.png'),
-                        ),
+                        leading: CircleAvatar(backgroundImage: provider),
                         title: Text(
                           user.name,
                           style: Theme.of(context).textTheme.labelLarge!
