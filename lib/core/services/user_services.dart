@@ -1,18 +1,18 @@
-import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
 import 'package:hive/hive.dart';
 
 class UserServices {
   static const String boxName = "usersBox";
 
-  Future<Box<UserModel>> get _box async =>
-      await Hive.openBox<UserModel>(boxName);
+  Future<Box<SupescriberModel>> get _box async =>
+      await Hive.openBox<SupescriberModel>(boxName);
 
-  Future<void> addUser(UserModel user) async {
+  Future<void> addUser(SupescriberModel user) async {
     final box = await _box;
     await box.add(user);
   }
 
-  Future<List<UserModel>> getUsers() async {
+  Future<List<SupescriberModel>> getUsers() async {
     final box = await _box;
     return box.values.toList();
   }
@@ -22,12 +22,12 @@ class UserServices {
     await box.deleteAt(index);
   }
 
-  Future<void> updateUserAt(int index, UserModel updatedUser) async {
+  Future<void> updateUserAt(int index, SupescriberModel updatedUser) async {
     final box = await _box;
     await box.putAt(index, updatedUser);
   }
 
-  Future<UserModel?> getUserById(int id) async {
+  Future<SupescriberModel?> getUserById(int id) async {
     final box = await _box;
     return box.values.firstWhere((user) => user.id == id);
   }

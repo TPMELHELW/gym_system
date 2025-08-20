@@ -27,13 +27,13 @@ class HomeScreen extends StatelessWidget {
           children: [
             Image.asset('assets/images/logo1.png'),
             SizedBox(height: 30),
-            NoramlButtonWidget(
+            NormalButtonWidget(
               onPressed: () {
                 Get.toNamed(AppRoutes.qrData);
               },
               text: 'إدارة المشتركين',
             ),
-            NoramlButtonWidget(
+            NormalButtonWidget(
               onPressed: () {
                 Get.toNamed(AppRoutes.scan);
               },

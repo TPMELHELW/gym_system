@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/services/user_services.dart';
-import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class ScanQrCodeController extends GetxController {
@@ -22,7 +22,9 @@ class ScanQrCodeController extends GetxController {
       int? parsedInt;
       try {
         parsedInt = int.parse(firstLine);
-        final UserModel? user = await userServices.getUserById(parsedInt);
+        final SupescriberModel? user = await userServices.getUserById(
+          parsedInt,
+        );
         if (user != null) {
           if (user.imagePath.startsWith('assets/')) {
             provider = AssetImage(user.imagePath);

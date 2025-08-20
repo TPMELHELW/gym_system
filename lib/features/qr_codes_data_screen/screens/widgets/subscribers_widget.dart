@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/constans/app_colors.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
-import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/display_qr_function.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class SubscribersWidget extends StatelessWidget {
-  final RxList<UserModel> users;
+  final RxList<SupescriberModel> users;
   final bool isEdit;
   const SubscribersWidget({super.key, required this.users, this.isEdit = true});
 

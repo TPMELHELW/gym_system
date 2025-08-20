@@ -1,10 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-part 'user_model.g.dart';
+part 'supescriber_model.g.dart';
 
 @HiveType(typeId: 1)
-class UserModel {
+class SupescriberModel {
   @HiveField(0)
   final String id; // Can be Firebase docId or local unique id
 
@@ -20,7 +20,7 @@ class UserModel {
   @HiveField(4)
   final String imagePath;
 
-  UserModel({
+  SupescriberModel({
     required this.id,
     required this.name,
     required this.startDate,
@@ -43,8 +43,8 @@ class UserModel {
   }
 
   /// 🔹 Create from Map (Firebase)
-  factory UserModel.fromMap(Map<String, dynamic> map, {String? docId}) {
-    return UserModel(
+  factory SupescriberModel.fromMap(Map<String, dynamic> map, {String? docId}) {
+    return SupescriberModel(
       id: map['id'] ?? docId ?? '',
       name: map['name'] ?? '',
       startDate: map['startDate'] ?? '',
@@ -54,8 +54,8 @@ class UserModel {
   }
 
   /// 🔹 Create from Firestore DocumentSnapshot
-  factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
+  factory SupescriberModel.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
-    return UserModel.fromMap(data, docId: snapshot.id);
+    return SupescriberModel.fromMap(data, docId: snapshot.id);
   }
 }

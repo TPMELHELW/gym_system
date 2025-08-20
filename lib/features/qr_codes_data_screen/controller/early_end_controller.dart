@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
-import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
 
 class EarlyEndController extends GetxController {
   static EarlyEndController get to => Get.find();
 
   final QrCodesDataController qrCodesDataController = QrCodesDataController.to;
-  final RxList<UserModel> expiringUsers = <UserModel>[].obs;
+  final RxList<SupescriberModel> expiringUsers = <SupescriberModel>[].obs;
 
   void checkExpiringSubscriptions() {
     final now = DateTime.now();

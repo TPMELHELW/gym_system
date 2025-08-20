@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gym_qr_code/core/constans/app_colors.dart';
 
-class NoramlButtonWidget extends StatelessWidget {
+class NormalButtonWidget extends StatelessWidget {
   final void Function() onPressed;
   final String text;
-  const NoramlButtonWidget({
+  const NormalButtonWidget({
     super.key,
     required this.onPressed,
     required this.text,

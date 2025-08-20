@@ -8,7 +8,7 @@ import 'package:gym_qr_code/core/functions/check_internet.dart';
 import 'package:gym_qr_code/core/functions/show_snackbar.dart';
 // import 'package:gym_qr_code/core/services/user_services.dart';
 import 'package:gym_qr_code/data/user_repository.dart';
-import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/display_qr_function.dart';
 // import 'package:image_cropper/image_cropper.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -28,8 +28,8 @@ class QrCodesDataController extends GetxController
   late TabController tabController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   Rx<String> imagePath = ''.obs;
-  RxList<UserModel> users = <UserModel>[].obs;
-  RxList<UserModel> filteredUsers = <UserModel>[].obs;
+  RxList<SupescriberModel> users = <SupescriberModel>[].obs;
+  RxList<SupescriberModel> filteredUsers = <SupescriberModel>[].obs;
   final UserRepository userRepository = Get.find<UserRepository>();
   late Rx<StatusRequest> statusRequest;
 
@@ -39,7 +39,7 @@ class QrCodesDataController extends GetxController
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  final RxList<UserModel> expiringUsers = <UserModel>[].obs;
+  final RxList<SupescriberModel> expiringUsers = <SupescriberModel>[].obs;
 
   void checkExpiringSubscriptions() {
     final now = DateTime.now();
@@ -121,7 +121,7 @@ class QrCodesDataController extends GetxController
   Future<void> editUser() async {
     if (!await checkInternet()) return;
     if (!formKey.currentState!.validate()) return;
-    final user = UserModel(
+    final user = SupescriberModel(
       name: nameController.text,
       startDate: firstDateController.text,
       endDate: endDateController.text,
@@ -145,7 +145,7 @@ class QrCodesDataController extends GetxController
   // Future<void> addUser() async {
   //   if (!formKey.currentState!.validate()) return;
   //   log(imagePath.value);
-  //   final user = UserModel(
+  //   final user = SupescriberModel(
   //     name: nameController.text,
   //     startDate: firstDateController.text,
   //     endDate: endDateController.text,
@@ -167,7 +167,7 @@ class QrCodesDataController extends GetxController
     try {
       if (!await checkInternet()) return;
       if (!formKey.currentState!.validate()) return;
-      final user = UserModel(
+      final user = SupescriberModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: nameController.text,
         startDate: firstDateController.text,
@@ -267,72 +267,72 @@ class QrCodesDataController extends GetxController
     statusRequest = StatusRequest.empty.obs;
   }
 
-  // void _initNotifications() async {
-  //   const AndroidInitializationSettings initializationSettingsAndroid =
-  //       AndroidInitializationSettings('@mipmap/launcher_icon');
-  //   final InitializationSettings initializationSettings =
-  //       InitializationSettings(android: initializationSettingsAndroid);
-  //   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  // }
+  void _initNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/launcher_icon');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
-  // @override
-  // void onClose() {
-  //   super.onClose();
-  // }
+  @override
+  void onClose() {
+    super.onClose();
+  }
 
-  // void checkExpiredSubscriptions() {
-  //   final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  //   for (var user in users) {
-  //     if (user.endDate == today) {
-  //       showNotification(user.name, users.indexOf(user));
-  //     }
-  //   }
-  // }
+  void checkExpiredSubscriptions() {
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    for (var user in users) {
+      if (user.endDate == today) {
+        showNotification(user.name, users.indexOf(user));
+      }
+    }
+  }
 
-  // Future<void> showNotification(String userName, int notificationIndex) async {
-  //   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //       AndroidNotificationDetails(
-  //         'subscription_channel',
-  //         'Subscription Notifications',
-  //         importance: Importance.max,
-  //         priority: Priority.high,
-  //         showWhen: false,
-  //       );
-  //   const NotificationDetails platformChannelSpecifics = NotificationDetails(
-  //     android: androidPlatformChannelSpecifics,
-  //   );
-  //   await flutterLocalNotificationsPlugin.show(
-  //     notificationIndex,
-  //     'Subscription Ended',
-  //     'تم انتهاء اشتراك $userName اليوم.',
-  //     platformChannelSpecifics,
-  //   );
-  // }
+  Future<void> showNotification(String userName, int notificationIndex) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'subscription_channel',
+          'Subscription Notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: false,
+        );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      notificationIndex,
+      'Subscription Ended',
+      'تم انتهاء اشتراك $userName اليوم.',
+      platformChannelSpecifics,
+    );
+  }
 
-  // static Future<void> sendExpiredNotifications() async {
-  //   final userServices = UserServices();
-  //   final users = await userServices.getUsers();
-  //   final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  //   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //       FlutterLocalNotificationsPlugin();
+  static Future<void> sendExpiredNotifications() async {
+    final userServices = Get.put<UserRepository>(UserRepository());
+    final users = await userServices.getUsers();
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
-  //   for (var user in users) {
-  //     if (user.endDate == today) {
-  //       const androidDetails = AndroidNotificationDetails(
-  //         'subscription_channel',
-  //         'Subscription Notifications',
-  //         importance: Importance.max,
-  //         priority: Priority.high,
-  //         showWhen: false,
-  //       );
-  //       const platformDetails = NotificationDetails(android: androidDetails);
-  //       await flutterLocalNotificationsPlugin.show(
-  //         users.indexOf(user),
-  //         'Subscription Ended',
-  //         'تم انتهاء اشتراك ${user.name} اليوم.',
-  //         platformDetails,
-  //       );
-  //     }
-  //   }
-  // }
+    for (var user in users) {
+      if (user.endDate == today) {
+        const androidDetails = AndroidNotificationDetails(
+          'subscription_channel',
+          'Subscription Notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: false,
+        );
+        const platformDetails = NotificationDetails(android: androidDetails);
+        await flutterLocalNotificationsPlugin.show(
+          users.indexOf(user),
+          'Subscription Ended',
+          'تم انتهاء اشتراك ${user.name} اليوم.',
+          platformDetails,
+        );
+      }
+    }
+  }
 }
