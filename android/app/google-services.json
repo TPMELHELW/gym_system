@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "444432050034",
+    "project_id": "quraan-99140",
+    "storage_bucket": "quraan-99140.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444432050034:android:644cfde6cd72428f611feb",
+        "android_client_info": {
+          "package_name": "com.example.gym_qr_code"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxXSObjAbzFiJlP8m5E4_tgd2RMWrLvYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
