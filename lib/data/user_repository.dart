@@ -1,3 +1,5 @@
+// import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/errors/firestore_errors.dart';
@@ -36,11 +38,7 @@ class UserRepository extends GetxService {
       await _db.collection("subscribers").doc(id).delete();
     } on FirebaseException catch (e) {
       final errorMessage = handleFirestoreError(e);
-      Get.snackbar(
-        "Delete Failed",
-        errorMessage,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      throw Exception(errorMessage);
     }
   }
 }

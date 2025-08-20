@@ -49,32 +49,32 @@ class FormQrWidget extends StatelessWidget {
               ),
             ],
           ),
-          Obx(
-            () => TextFormField(
-              readOnly: true,
-              decoration: InputDecoration(
-                suffixIcon: TextButton(
-                  onPressed: () {
-                    showSelectImage();
-                  },
-                  child: homeController.imagePath.value == ''
-                      ? Text('اختر صورة')
-                      : Text('تم اختيار صورة'),
-                ),
-                filled: true,
 
-                fillColor: AppColors.grey,
-                hintText: homeController.imagePath.value == ''
-                    ? 'اختر صورة'
-                    : 'تم اختيار صورة',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ),
-          ),
+          // Obx(
+          //   () => TextFormField(
+          //     readOnly: true,
+          //     decoration: InputDecoration(
+          //       suffixIcon: TextButton(
+          //         onPressed: () {
+          //           showSelectImage();
+          //         },
+          //         child: homeController.imagePath.value == ''
+          //             ? Text('اختر صورة')
+          //             : Text('تم اختيار صورة'),
+          //       ),
+          //       filled: true,
 
+          //       fillColor: AppColors.grey,
+          //       hintText: homeController.imagePath.value == ''
+          //           ? 'اختر صورة'
+          //           : 'تم اختيار صورة',
+          //       border: OutlineInputBorder(
+          //         borderSide: BorderSide.none,
+          //         borderRadius: BorderRadius.circular(15),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Obx(
             () => NoramlButtonWidget(
               onPressed: () async {

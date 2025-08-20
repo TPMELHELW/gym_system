@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,22 +6,22 @@ import 'package:get/get.dart';
 import 'package:gym_qr_code/core/enum/status_request.dart';
 import 'package:gym_qr_code/core/functions/check_internet.dart';
 import 'package:gym_qr_code/core/functions/show_snackbar.dart';
-import 'package:gym_qr_code/core/services/user_services.dart';
+// import 'package:gym_qr_code/core/services/user_services.dart';
 import 'package:gym_qr_code/data/user_repository.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/display_qr_function.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_cropper/image_cropper.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
+// import 'package:path/path.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'package:path/path.dart' as path;
 
 class QrCodesDataController extends GetxController
     with GetSingleTickerProviderStateMixin {
   static QrCodesDataController get to => Get.find<QrCodesDataController>();
-  final UserServices userServices = UserServices();
+  // final UserServices userServices = UserServices();
   final TextEditingController firstDateController = TextEditingController();
   final TextEditingController endDateController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -72,23 +72,40 @@ class QrCodesDataController extends GetxController
     try {
       if (!await checkInternet()) return;
       users.value = await userRepository.getUsers();
+      filteredUsers.assignAll(users);
     } catch (e) {
       showErrorSnackbar(e.toString());
     }
   }
 
-  Future<void> deleteUser(int index) async {
-    // Use filteredUsers for index
-    final user = filteredUsers[index];
-    final userIndex = users.indexOf(user);
+  // Future<void> deleteUser(int index) async {
+  //   // Use filteredUsers for index
+  //   final user = filteredUsers[index];
+  //   final userIndex = users.indexOf(user);
 
-    await userServices.deleteUserAt(userIndex);
-    final File imageFile = File(user.imagePath);
-    if (await imageFile.exists()) {
-      await imageFile.delete();
+  //   await userServices.deleteUserAt(userIndex);
+  //   final File imageFile = File(user.imagePath);
+  //   if (await imageFile.exists()) {
+  //     await imageFile.delete();
+  //   }
+  //   users.removeAt(userIndex);
+  //   filteredUsers.removeAt(index);
+  // }
+  Future<void> deleteUser(int index) async {
+    try {
+      if (!await checkInternet()) return;
+      final user = filteredUsers[index];
+      await userRepository.deleteUser(user.id);
+      final File imageFile = File(user.imagePath);
+      if (await imageFile.exists()) {
+        await imageFile.delete();
+      }
+      users.remove(user);
+      filteredUsers.removeAt(index);
+      searchFun('');
+    } catch (e) {
+      showErrorSnackbar(e.toString());
     }
-    users.removeAt(userIndex);
-    filteredUsers.removeAt(index);
   }
 
   void getInputToEdit(int index) {
@@ -102,14 +119,16 @@ class QrCodesDataController extends GetxController
   }
 
   Future<void> editUser() async {
+    if (!await checkInternet()) return;
+    if (!formKey.currentState!.validate()) return;
     final user = UserModel(
       name: nameController.text,
       startDate: firstDateController.text,
       endDate: endDateController.text,
       imagePath: imagePath.value,
-      id: users[currentIndex].id, // keep original id
+      id: users[currentIndex].id,
     );
-    await userServices.updateUserAt(currentIndex, user);
+    await userRepository.saveUser(user);
     users[currentIndex] = user;
     searchFun('');
     isEdit.value = false;
@@ -149,14 +168,21 @@ class QrCodesDataController extends GetxController
       if (!await checkInternet()) return;
       if (!formKey.currentState!.validate()) return;
       final user = UserModel(
-        id: '',
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: nameController.text,
         startDate: firstDateController.text,
         endDate: endDateController.text,
-        imagePath: imagePath.value,
+        imagePath: imagePath.value == ''
+            ? 'assets/images/logo2.jpg'
+            : imagePath.value,
       );
       await userRepository.saveUser(user);
       users.add(user);
+      filteredUsers.add(user);
+      displayQrFunction(
+        '${user.id}\n${user.name}\n${user.startDate}\n${user.endDate}',
+      );
+      resetController();
     } catch (e) {
       showErrorSnackbar(e.toString());
     }
@@ -180,54 +206,54 @@ class QrCodesDataController extends GetxController
     }
   }
 
-  Future<void> clearSavedImages() async {
-    final Directory appDir = await getApplicationDocumentsDirectory();
-    final List<FileSystemEntity> files = appDir.listSync();
-    for (final file in files) {
-      if (file.path.endsWith('.jpg') || file.path.endsWith('.png')) {
-        await file.delete();
-      }
-    }
-  }
+  // Future<void> clearSavedImages() async {
+  //   final Directory appDir = await getApplicationDocumentsDirectory();
+  //   final List<FileSystemEntity> files = appDir.listSync();
+  //   for (final file in files) {
+  //     if (file.path.endsWith('.jpg') || file.path.endsWith('.png')) {
+  //       await file.delete();
+  //     }
+  //   }
+  // }
 
-  Future<void> chooseImage(bool isCamera) async {
-    try {
-      final pickedFile = await ImagePicker().pickImage(
-        source: isCamera ? ImageSource.camera : ImageSource.gallery,
-      );
-      if (pickedFile == null) {
-        return;
-      }
-      CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'تعديل الصورة',
-            cropStyle: CropStyle.circle,
-            toolbarColor: Colors.blue,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
-          ),
-        ],
-      );
-      if (croppedFile == null) {
-        // log('ddd');
-        return;
-      }
-      // log('ssss');
-      final Directory appPath = await getApplicationDocumentsDirectory();
-      final String fileName = basename(croppedFile.path);
-      final String destinationPath = path.join(appPath.path, fileName);
-      final File newImage = await File(croppedFile.path).copy(destinationPath);
+  // Future<void> chooseImage(bool isCamera) async {
+  //   try {
+  //     final pickedFile = await ImagePicker().pickImage(
+  //       source: isCamera ? ImageSource.camera : ImageSource.gallery,
+  //     );
+  //     if (pickedFile == null) {
+  //       return;
+  //     }
+  //     CroppedFile? croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: pickedFile.path,
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //           toolbarTitle: 'تعديل الصورة',
+  //           cropStyle: CropStyle.circle,
+  //           toolbarColor: Colors.blue,
+  //           toolbarWidgetColor: Colors.white,
+  //           initAspectRatio: CropAspectRatioPreset.original,
+  //           lockAspectRatio: false,
+  //         ),
+  //       ],
+  //     );
+  //     if (croppedFile == null) {
+  //       // log('ddd');
+  //       return;
+  //     }
+  //     // log('ssss');
+  //     final Directory appPath = await getApplicationDocumentsDirectory();
+  //     final String fileName = basename(croppedFile.path);
+  //     final String destinationPath = path.join(appPath.path, fileName);
+  //     final File newImage = await File(croppedFile.path).copy(destinationPath);
 
-      imagePath.value = newImage.path;
-      // log('Image saved at: $imagePath');
-      Get.back();
-    } catch (e) {
-      log('Error choosing image: $e');
-    }
-  }
+  //     imagePath.value = newImage.path;
+  //     // log('Image saved at: $imagePath');
+  //     Get.back();
+  //   } catch (e) {
+  //     log('Error choosing image: $e');
+  //   }
+  // }
 
   @override
   void onInit() {
