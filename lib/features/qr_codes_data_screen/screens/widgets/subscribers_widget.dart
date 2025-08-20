@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/constans/app_colors.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
+import 'package:gym_qr_code/features/qr_codes_data_screen/model/user_model.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/widgets/display_qr_function.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class SubscribersWidget extends StatelessWidget {
-  const SubscribersWidget({super.key});
+  final RxList<UserModel> users;
+  const SubscribersWidget({super.key, required this.users});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +22,16 @@ class SubscribersWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Obx(() {
-        if (controller.users.isEmpty) {
+        if (users.isEmpty) {
           return Center(
             child: Lottie.asset('assets/animation/loading.json', height: 50),
           );
         }
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: controller.filteredUsers.length,
+          itemCount: users.length,
           itemBuilder: (context, index) {
-            final user = controller.filteredUsers[index];
+            final user = users[index];
             ImageProvider? provider;
 
             if (user.imagePath.isNotEmpty) {

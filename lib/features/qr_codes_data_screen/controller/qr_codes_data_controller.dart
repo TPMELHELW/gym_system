@@ -14,13 +14,14 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
-class QrCodesDataController extends GetxController {
+class QrCodesDataController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   static QrCodesDataController get to => Get.find<QrCodesDataController>();
   final UserServices userServices = UserServices();
   final TextEditingController firstDateController = TextEditingController();
   final TextEditingController endDateController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  // final TextEditingController searchController = TextEditingController();
+  late TabController tabController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   Rx<String> imagePath = ''.obs;
   RxList<UserModel> users = <UserModel>[].obs;
@@ -31,6 +32,17 @@ class QrCodesDataController extends GetxController {
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  final RxList<UserModel> expiringUsers = <UserModel>[].obs;
+
+  void checkExpiringSubscriptions() {
+    final now = DateTime.now();
+
+    expiringUsers.value = users.where((user) {
+      final diff = user.endDateAsDateTime.difference(now).inDays;
+      return diff <= 3 && diff >= 0;
+    }).toList();
+  }
 
   void searchFun(String query) {
     if (query.isEmpty) {
@@ -84,7 +96,7 @@ class QrCodesDataController extends GetxController {
     );
     await userServices.updateUserAt(currentIndex, user);
     users[currentIndex] = user;
-    searchFun(''); // Reset search and update filteredUsers
+    searchFun('');
     isEdit.value = false;
     resetController();
   }
@@ -104,13 +116,13 @@ class QrCodesDataController extends GetxController {
       startDate: firstDateController.text,
       endDate: endDateController.text,
       imagePath: imagePath.value == ''
-          ? 'assets/images/logo.png'
+          ? 'assets/images/logo2.jpg'
           : imagePath.value,
       id: DateTime.now().millisecondsSinceEpoch,
     );
     await userServices.addUser(user);
     await loadUsers();
-    searchFun(''); // Reset search and update filteredUsers
+    searchFun('');
     displayQrFunction(
       '${user.id}\n${user.name}\n${user.startDate}\n${user.endDate}',
     );
@@ -192,7 +204,7 @@ class QrCodesDataController extends GetxController {
       filteredUsers.assignAll(users);
       checkExpiredSubscriptions();
     });
-    // searchController.addListener(_onSearchChanged);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   void _initNotifications() async {
@@ -205,7 +217,6 @@ class QrCodesDataController extends GetxController {
 
   @override
   void onClose() {
-    // searchController.dispose();
     super.onClose();
   }
 

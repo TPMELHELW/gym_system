@@ -26,4 +26,6 @@ class UserModel {
     required this.imagePath,
     required this.id,
   });
+
+  DateTime get endDateAsDateTime => DateTime.parse(endDate);
 }

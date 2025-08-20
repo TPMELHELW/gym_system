@@ -25,6 +25,7 @@ class InfoScreen extends StatelessWidget {
                 child: Text(
                   'Developed By [Mahmoud Elhelw] 🤍 \n mahmoudtarekelhelw1234@gmail.com \n +201026271039 \n Version 1.0.0 \n © 2025 All rights reserved.',
                   textAlign: TextAlign.center,
+                  textDirection: TextDirection.ltr,
                 ),
               ),
             );

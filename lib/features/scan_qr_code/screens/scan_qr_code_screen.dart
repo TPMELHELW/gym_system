@@ -33,7 +33,7 @@ class ScanQrCodeScreen extends StatelessWidget {
                         builder: (controller) {
                           return CircleAvatar(
                             backgroundImage: controller.provider,
-                            radius: 30,
+                            radius: 60,
                           );
                         },
                       ),
