@@ -3,6 +3,7 @@ abstract class AppRoutes {
   static const String info = '/info';
   static const String scan = '/scan';
   static const String qrData = '/qr-data';
+  static const String login = '/login';
   // static  String about = '/about';
   // static const Stringconst contact = '/contact';
 }

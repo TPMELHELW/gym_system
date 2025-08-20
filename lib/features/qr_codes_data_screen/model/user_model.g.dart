@@ -17,11 +17,11 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserModel(
-      name: fields[0] as String,
-      startDate: fields[1] as String,
-      endDate: fields[2] as String,
-      imagePath: fields[3] as String? ?? '',
-      id: fields[4] as int? ?? DateTime.now().millisecondsSinceEpoch,
+      id: fields[0] as String,
+      name: fields[1] as String,
+      startDate: fields[2] as String,
+      endDate: fields[3] as String,
+      imagePath: fields[4] as String,
     );
   }
 
@@ -30,15 +30,15 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
     writer
       ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.startDate)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.endDate)
+      ..write(obj.startDate)
       ..writeByte(3)
-      ..write(obj.imagePath)
+      ..write(obj.endDate)
       ..writeByte(4)
-      ..write(obj.id);
+      ..write(obj.imagePath);
   }
 
   @override

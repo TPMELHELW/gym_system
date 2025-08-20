@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/routes/app_routes.dart';
+import 'package:gym_qr_code/features/auth/login_screen/screens/login_screen.dart';
 import 'package:gym_qr_code/features/home_screen/screens/home_screen.dart';
 import 'package:gym_qr_code/features/info/screens/info_screen.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/screens/qr_codes_data_screen.dart';
@@ -33,6 +34,11 @@ class AppPages {
       transition: Transition.cupertino,
 
       // binding: QrDataBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.login,
+      page: () => const LoginScreen(),
+      transition: Transition.cupertino,
     ),
   ];
 }
