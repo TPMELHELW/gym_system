@@ -11,7 +11,8 @@ import 'package:lottie/lottie.dart';
 
 class SubscribersWidget extends StatelessWidget {
   final RxList<UserModel> users;
-  const SubscribersWidget({super.key, required this.users});
+  final bool isEdit;
+  const SubscribersWidget({super.key, required this.users, this.isEdit = true});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,7 @@ class SubscribersWidget extends StatelessWidget {
         return ListView.builder(
           shrinkWrap: true,
           itemCount: users.length,
+          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final user = users[index];
             ImageProvider? provider;
@@ -58,19 +60,21 @@ class SubscribersWidget extends StatelessWidget {
               subtitle: Text(
                 'Start Date: ${user.startDate}\nEnd Date: ${user.endDate}',
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Iconsax.edit),
-                    onPressed: () => controller.getInputToEdit(index),
-                  ),
-                  IconButton(
-                    icon: Icon(Iconsax.trash),
-                    onPressed: () => controller.deleteUser(index),
-                  ),
-                ],
-              ),
+              trailing: isEdit
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Iconsax.edit),
+                          onPressed: () => controller.getInputToEdit(index),
+                        ),
+                        IconButton(
+                          icon: Icon(Iconsax.trash),
+                          onPressed: () => controller.deleteUser(index),
+                        ),
+                      ],
+                    )
+                  : null,
             );
           },
         );

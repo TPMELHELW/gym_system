@@ -22,7 +22,10 @@ class EarlyEndSubscTab extends StatelessWidget {
 
           controller.expiringUsers.isEmpty
               ? SizedBox()
-              : SubscribersWidget(users: controller.expiringUsers),
+              : SubscribersWidget(
+                  users: controller.expiringUsers,
+                  isEdit: false,
+                ),
         ],
       ),
     );
