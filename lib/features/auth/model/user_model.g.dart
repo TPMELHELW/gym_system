@@ -1,47 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'supescriber_model.dart';
+part of 'user_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SupescriberModelAdapter extends TypeAdapter<SupescriberModel> {
+class UserModelAdapter extends TypeAdapter<UserModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
-  SupescriberModel read(BinaryReader reader) {
+  UserModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SupescriberModel(
+    return UserModel(
       id: fields[0] as String,
       name: fields[1] as String,
-      startDate: fields[2] as String,
-      endDate: fields[3] as String,
-      imagePath: fields[4] as String,
-      gymName: fields[5] as String,
+      email: fields[2] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SupescriberModel obj) {
+  void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.startDate)
-      ..writeByte(3)
-      ..write(obj.endDate)
-      ..writeByte(4)
-      ..write(obj.imagePath)
-      ..writeByte(5)
-      ..write(obj.gymName);
+      ..write(obj.email);
   }
 
   @override
@@ -50,7 +41,7 @@ class SupescriberModelAdapter extends TypeAdapter<SupescriberModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SupescriberModelAdapter &&
+      other is UserModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

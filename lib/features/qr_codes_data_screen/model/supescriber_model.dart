@@ -20,12 +20,16 @@ class SupescriberModel {
   @HiveField(4)
   final String imagePath;
 
+  @HiveField(5)
+  final String gymName;
+
   SupescriberModel({
     required this.id,
     required this.name,
     required this.startDate,
     required this.endDate,
     required this.imagePath,
+    required this.gymName,
   });
 
   /// 🔹 Helper to parse endDate as DateTime
@@ -39,6 +43,7 @@ class SupescriberModel {
       'startDate': startDate,
       'endDate': endDate,
       'imagePath': imagePath,
+      'gymName': gymName,
     };
   }
 
@@ -50,6 +55,7 @@ class SupescriberModel {
       startDate: map['startDate'] ?? '',
       endDate: map['endDate'] ?? '',
       imagePath: map['imagePath'] ?? '',
+      gymName: map['gymName'] ?? '',
     );
   }
 

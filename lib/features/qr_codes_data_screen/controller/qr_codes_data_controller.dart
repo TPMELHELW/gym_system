@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:gym_qr_code/core/enum/status_request.dart';
 import 'package:gym_qr_code/core/functions/check_internet.dart';
 import 'package:gym_qr_code/core/functions/show_snackbar.dart';
+import 'package:gym_qr_code/core/services/user_services.dart';
 // import 'package:gym_qr_code/core/services/user_services.dart';
 import 'package:gym_qr_code/data/user_repository.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
@@ -21,7 +22,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class QrCodesDataController extends GetxController
     with GetSingleTickerProviderStateMixin {
   static QrCodesDataController get to => Get.find<QrCodesDataController>();
-  // final UserServices userServices = UserServices();
+  final UserServices userServices = Get.find<UserServices>();
   final TextEditingController firstDateController = TextEditingController();
   final TextEditingController endDateController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -62,35 +63,18 @@ class QrCodesDataController extends GetxController
     }
   }
 
-  // Future<void> loadUsers() async {
-  //   users.value = await userServices.getUsers();
-  //   filteredUsers.assignAll(users);
-  //   log('Loaded users: ${users.length}');
-  // }
-
   Future<void> loadUsers() async {
     try {
       if (!await checkInternet()) return;
-      users.value = await userRepository.getUsers();
+      users.value = await userRepository.getUsers(
+        userServices.currentUser.value!.name,
+      );
       filteredUsers.assignAll(users);
     } catch (e) {
       showErrorSnackbar(e.toString());
     }
   }
 
-  // Future<void> deleteUser(int index) async {
-  //   // Use filteredUsers for index
-  //   final user = filteredUsers[index];
-  //   final userIndex = users.indexOf(user);
-
-  //   await userServices.deleteUserAt(userIndex);
-  //   final File imageFile = File(user.imagePath);
-  //   if (await imageFile.exists()) {
-  //     await imageFile.delete();
-  //   }
-  //   users.removeAt(userIndex);
-  //   filteredUsers.removeAt(index);
-  // }
   Future<void> deleteUser(int index) async {
     try {
       if (!await checkInternet()) return;
@@ -127,6 +111,7 @@ class QrCodesDataController extends GetxController
       endDate: endDateController.text,
       imagePath: imagePath.value,
       id: users[currentIndex].id,
+      gymName: userServices.currentUser.value!.name,
     );
     await userRepository.saveUser(user);
     users[currentIndex] = user;
@@ -142,27 +127,6 @@ class QrCodesDataController extends GetxController
     imagePath.value = '';
   }
 
-  // Future<void> addUser() async {
-  //   if (!formKey.currentState!.validate()) return;
-  //   log(imagePath.value);
-  //   final user = SupescriberModel(
-  //     name: nameController.text,
-  //     startDate: firstDateController.text,
-  //     endDate: endDateController.text,
-  //     imagePath: imagePath.value == ''
-  //         ? 'assets/images/logo2.jpg'
-  //         : imagePath.value,
-  //     id: DateTime.now().millisecondsSinceEpoch,
-  //   );
-  //   await userServices.addUser(user);
-  //   await loadUsers();
-  //   searchFun('');
-  //   displayQrFunction(
-  //     '${user.id}\n${user.name}\n${user.startDate}\n${user.endDate}',
-  //   );
-  //   resetController();
-  // }
-
   Future<void> addUser() async {
     try {
       if (!await checkInternet()) return;
@@ -175,6 +139,7 @@ class QrCodesDataController extends GetxController
         imagePath: imagePath.value == ''
             ? 'assets/images/logo2.jpg'
             : imagePath.value,
+        gymName: userServices.currentUser.value!.name,
       );
       await userRepository.saveUser(user);
       users.add(user);
@@ -277,6 +242,10 @@ class QrCodesDataController extends GetxController
 
   @override
   void onClose() {
+    tabController.dispose();
+    firstDateController.dispose();
+    endDateController.dispose();
+    nameController.dispose();
     super.onClose();
   }
 
@@ -310,8 +279,11 @@ class QrCodesDataController extends GetxController
   }
 
   static Future<void> sendExpiredNotifications() async {
-    final userServices = Get.put<UserRepository>(UserRepository());
-    final users = await userServices.getUsers();
+    final userRepository = Get.put<UserRepository>(UserRepository());
+    final UserServices userServices = Get.find<UserServices>();
+    final users = await userRepository.getUsers(
+      userServices.currentUser.value!.name,
+    );
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();

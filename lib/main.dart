@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:gym_qr_code/core/functions/init_services.dart';
 import 'package:gym_qr_code/core/routes/app_pages.dart';
 import 'package:gym_qr_code/core/theme/theme.dart';
-import 'package:gym_qr_code/features/auth/login_screen/screens/login_screen.dart';
-import 'package:gym_qr_code/features/home_screen/screens/home_screen.dart';
+import 'package:gym_qr_code/data/auth_repository.dart';
+// import 'package:gym_qr_code/features/auth/login_screen/screens/login_screen.dart';
+import 'package:gym_qr_code/features/auth/model/user_model.dart';
+// import 'package:gym_qr_code/features/home_screen/screens/home_screen.dart';
 import 'package:gym_qr_code/features/qr_codes_data_screen/controller/qr_codes_data_controller.dart';
-import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
+// import 'package:gym_qr_code/features/qr_codes_data_screen/model/supescriber_model.dart';
 import 'package:gym_qr_code/firebase_options.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,17 +28,20 @@ void callbackDispatcher() {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initServices();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) => Get.put(AuthRepository()));
   await Permission.notification.request();
   await Hive.initFlutter();
-  Hive.registerAdapter(SupescriberModelAdapter());
+  Hive.registerAdapter(UserModelAdapter());
   await Workmanager().initialize(callbackDispatcher);
   await Workmanager().registerPeriodicTask(
     DateTime.now().millisecondsSinceEpoch.toString(),
     "checkExpiredSubscriptions",
     frequency: const Duration(hours: 24),
   );
+  await initServices();
 
   runApp(MyApp());
 }
@@ -61,7 +66,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       darkTheme: AppTheme.darkTheme,
       theme: AppTheme.lightTheme,
-      home: LoginScreen(),
+      home: Center(child: CircularProgressIndicator()),
     );
   }
 }

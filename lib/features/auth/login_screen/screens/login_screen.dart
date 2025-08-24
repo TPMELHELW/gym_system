@@ -40,6 +40,7 @@ class LoginScreen extends StatelessWidget {
                   NormalButtonWidget(
                     text: 'تسجيل الدخول',
                     onPressed: () => controller.login(),
+                    statusRequest: controller.statusRequest,
                   ),
                 ],
               ),

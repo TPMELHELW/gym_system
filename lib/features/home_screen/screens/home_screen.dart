@@ -32,12 +32,14 @@ class HomeScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.qrData);
               },
               text: 'إدارة المشتركين',
+              // statusRequest: null,
             ),
             NormalButtonWidget(
               onPressed: () {
                 Get.toNamed(AppRoutes.scan);
               },
               text: 'مسح رمز الاستجابة السريعة',
+              // statusRequest: null,
             ),
           ],
         ),

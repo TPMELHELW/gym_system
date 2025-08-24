@@ -2,22 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:gym_qr_code/core/errors/auth_errors.dart';
 import 'package:gym_qr_code/core/routes/app_routes.dart';
-import 'package:gym_qr_code/features/auth/login_screen/screens/login_screen.dart';
 
-class AuthRepository extends GetxService {
+class AuthRepository extends GetxController {
   final _auth = FirebaseAuth.instance;
 
   final currentUser = FirebaseAuth.instance.currentUser;
 
   void screenRedirect() {
     if (_auth.currentUser != null) {
-      // if (_auth.currentUser?.emailVerified ?? false) {
       Get.offAllNamed(AppRoutes.home);
     } else {
-      // storage.writeIfNull("isFirstTime", true);
-      // storage.read("isFirstTime")
-      //     ? Get.offAll(() => const OnBoardingScreen())
-      Get.offAll(() => const LoginScreen());
+      Get.offAllNamed(AppRoutes.login);
     }
   }
 
@@ -49,6 +44,16 @@ class AuthRepository extends GetxService {
       throw Exception(errorMessage);
     }
   }
+
+  @override
+  void onReady() {
+    screenRedirect();
+    super.onReady();
+  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  // }
 
   // Future<void>
 }
